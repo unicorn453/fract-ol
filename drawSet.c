@@ -6,31 +6,13 @@
 /*   By: kruseva <kruseva@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 14:06:08 by kruseva           #+#    #+#             */
-/*   Updated: 2024/11/30 14:00:43 by kruseva          ###   ########.fr       */
+/*   Updated: 2024/12/01 21:26:26 by kruseva          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "mandelbrot.h" 
 
-
-struct s_col_name {
-    char *name;
-    int color;
-};
-
-
-extern struct s_col_name mlx_col_name[];
-
-int get_color_by_name(char *name)
-{
-    for (int i = 0; mlx_col_name[i].name != 0; i++)
-    {
-        if (strcmp(mlx_col_name[i].name, name) == 0)
-            return mlx_col_name[i].color;
-    }
-    return -1;
-}
 
 int preDefinedColors(int numColor)
 {
@@ -56,44 +38,70 @@ int close_window(t_data *data)
     exit(0);
     return (0);
 }
-
-int drawSet(char **set)
+void drawSet(t_data *fractal)
 {
-    t_data data;
-    data.numColor = 1;
-    printf("Initializing MiniLibX\n");
-    data.mlx = mlx_init();
-    if (data.mlx == NULL)
-    {
-        printf("Error: mlx_init failed\n");
-        return 1;
-    }
-    printf("Creating window\n");
-    data.win = mlx_new_window(data.mlx, WIN_WIDTH, WIN_HEIGHT, "Mandelbrot Set");
-    if (data.win == NULL)
-    {
-        printf("Error: mlx_new_window failed\n");
-        return 1;
-    }
-    mlx_key_hook(data.win, handle_key, &data);
-    mlx_mouse_hook(data.win, handle_mouse, &data);
+    fractal->width = WIN_WIDTH;
+    fractal->height = WIN_HEIGHT;
 
-    mlx_hook(data.win, 17, 0, close_window, &data); // Handle window close event
-    printf("set: %s\n", *set);
-    if (strcmp(*set, "mandelbrot") == 0)
+    memset(fractal->addr, 0, WIN_WIDTH * WIN_HEIGHT * (fractal->bits_per_pixel / 8));
+    createMandelbrot(fractal);
+    mlx_put_image_to_window(fractal->mlx, fractal->win, fractal->img, 0, 0);
+}
+
+struct s_col_name {
+    char *name;
+    int color;
+};
+
+void put_pixel(t_data *fractal, int x, int y, int color)
+{
+    char *dst;
+    dst = fractal->addr + (y * fractal->line_length + x * (fractal->bits_per_pixel / 8));
+    *(unsigned int *)dst = color;
+}
+
+extern struct s_col_name mlx_col_name[];
+
+int get_color_by_name(char *name)
+{
+    for (int i = 0; mlx_col_name[i].name != 0; i++)
     {
-        data.x = -2.0;
-        data.y = -2.0;
-        data.width = WIN_WIDTH;
-        data.height = WIN_HEIGHT;
-        data.maxIterations = 600;
-        createMandelbrot(&data);
-        mlx_loop(data.mlx);
+        if (strcmp(mlx_col_name[i].name, name) == 0)
+            return mlx_col_name[i].color;
     }
-    else
+    return -1;
+}
+
+
+
+void *initialize(char **name)
+{
+    t_data *fractal;
+    fractal = (t_data *)malloc(sizeof(t_data));
+    fractal->mlx = mlx_init();
+    fractal->win = mlx_new_window(fractal->mlx, WIN_WIDTH, WIN_HEIGHT, *name);
+    fractal->img = mlx_new_image(fractal->mlx, WIN_WIDTH, WIN_HEIGHT);
+    fractal->addr = mlx_get_data_addr(fractal->img, &fractal->bits_per_pixel, &fractal->line_length, &fractal->endian);
+    fractal->maxIterations = 50;
+    fractal->numColor = 0;
+    fractal->x = 0;
+    fractal->y = 0;
+    fractal->width = WIN_WIDTH;
+    fractal->height = WIN_HEIGHT;
+    fractal->zoom = 1;
+    fractal->complex_x = 0;
+    fractal->complex_y = 0;
+    fractal->name = *name;
+
+    if (strcmp(*name, "mandelbrot") == 0)
     {
-        printf("Invalid set name\n");
-        return 1;
+        drawSet(fractal);
     }
-    return 0;
+
+    mlx_hook(fractal->win, 2, 1L << 0, handle_key, fractal);
+    mlx_hook(fractal->win, 4, 1L << 2, handle_mouse, fractal);
+    mlx_hook(fractal->win, 17, 0, close_window, fractal);
+    mlx_loop(fractal->mlx);
+
+    return (NULL);
 }

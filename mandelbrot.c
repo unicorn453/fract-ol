@@ -6,70 +6,56 @@
 /*   By: kruseva <kruseva@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:16:07 by kruseva           #+#    #+#             */
-/*   Updated: 2024/11/30 13:27:11 by kruseva          ###   ########.fr       */
+/*   Updated: 2024/12/01 21:31:35 by kruseva          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mandelbrot.h" 
-
+#include "mandelbrot.h"
 
 double magnitude(double real, double imaginary)
 {
     return real * real + imaginary * imaginary;
 }
 
-int mandelbrot(complexNum c)
-{
 
-    complexNum z;
-    z.real = 0;
-    z.imaginary = 0;
+int mandelbrot(t_data *fractal)
+{
+    fractal->z.real = 0;
+    fractal->z.imaginary = 0;
     int i = 0;
-    while(i < 600)
+    while (++i < fractal->maxIterations)
     {
-        double real = z.real;
-        double imaginary = z.imaginary;
-        z.real = real * real - imaginary * imaginary + c.real;
-        z.imaginary = 2 * real * imaginary + c.imaginary;
-        if (magnitude(z.real, z.imaginary) > 2.0)
+        double real = fractal->z.real;
+        double imaginary = fractal->z.imaginary;
+        fractal->z.real = real * real - imaginary * imaginary + fractal->c.real;
+        fractal->z.imaginary = 2 * real * imaginary + fractal->c.imaginary;
+        if (magnitude(fractal->z.real, fractal->z.imaginary) > 2.0)
             break;
-        i++;
     }
     return i;
 }
 
-void createMandelbrot(t_data *data)
-{
-    printf("Creating Mandelbrot set\n");
-    printf("Width: %d, Height: %d\n", data->width, data->height);
 
-    int width = data->width;
-    int height = data->height;
-    double x = -2.0;
-    double y = -2.0;
-    double dx = 4.0 / width;
-    double dy = 4.0 / height;
-    int i = 0;
-    while (i < height)
+
+void createMandelbrot(t_data *fractal)
+{
+    int color;
+    for (int x = 0; x < fractal->width; x++)
     {
-        int j = 0;
-        while (j < width)
+        for (int y = 0; y < fractal->height; y++)
         {
-            complexNum c;
-            c.real = x + j * dx;
-            c.imaginary = y + i * dy;
-            int n = mandelbrot(c);
-            int color = preDefinedColors(data->numColor);
-            if (n == data->maxIterations)
-                mlx_pixel_put(data->mlx, data->win, j, i, 0x000000);
-            else
-                mlx_pixel_put(data->mlx, data->win, j, i, color);
-            j++;
+            fractal->c.real = (x - fractal->width / 2.0) * 4.0 / (fractal->width * fractal->zoom) + fractal->complex_x;
+            fractal->c.imaginary = (y - fractal->height / 2.0) * 4.0 / (fractal->height * fractal->zoom) + fractal->complex_y;
+
+            int n = mandelbrot(fractal);
+
+            color = (n == fractal->maxIterations) ? 0x000000 : preDefinedColors(fractal->numColor) + (n * 255 / fractal->maxIterations);
+            put_pixel(fractal, x, y, color);
         }
-        i++;
     }
-    printf("Finished creating Mandelbrot set\n");
 }
+
+
 
 int main(int argc, char **argv)
 {
@@ -80,7 +66,7 @@ int main(int argc, char **argv)
         return 1;
     }
     printf("Argument: %s\n", argv[1]);
-    if (drawSet(&argv[1]) != 0)
+    if (initialize(&argv[1]) != 0)
     {
         printf("Error: drawSet failed\n");
         return 1;
