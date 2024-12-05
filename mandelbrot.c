@@ -6,11 +6,11 @@
 /*   By: kruseva <kruseva@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:16:07 by kruseva           #+#    #+#             */
-/*   Updated: 2024/12/05 14:31:40 by kruseva          ###   ########.fr       */
+/*   Updated: 2024/12/05 22:14:53 by kruseva          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mandelbrot.h"
+#include "fractol.h"
 
 double magnitude(double real, double imaginary)
 {
@@ -59,16 +59,37 @@ void createMandelbrot(t_data *fractal)
 
 int main(int argc, char **argv)
 {
-    if (argc != 2)
+    if (argc < 2)
     {
-        printf("Usage: ./mandelbrot [mandelbrot]\n");
+        printf("Usage: ./fractol [mandelbrot]\n");
+        printf("Usage: ./fractol [julia] real_num imaginary_num\n");
+        printf("List fractals: julia, mandelbrot\n");
         return 1;
     }
     printf("Argument: %s\n", argv[1]);
-    if (initialize(&argv[1]) != 0)
+
+    if(strcmp(argv[1], "mandelbrot") == 0 || strcmp(argv[1], "burning_ship") == 0)
     {
-        printf("Error: drawSet failed\n");
-        return 1;
+        if(initialize(&argv[1]) != 0)
+        {
+            printf("Error: initialize failed\n");
+            return 1;
+        }
+    }
+    else if(strcmp(argv[1], "julia") == 0)
+    {
+        if(argv[2] == NULL || argv[3] == NULL)
+        {
+            printf("Usage: ./fractol [julia] real_num imaginary_num\n");
+            return 1;
+        }
+        if(initialize_julia(&argv[1], &argv[2], &argv[3]) != 0)
+        {
+            printf("Error: initialize_julia failed\n");
+            return 1;
+        }
     }
     return 0;
 }
+
+

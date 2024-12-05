@@ -2,7 +2,7 @@ CC_FLAGS = -Wall -Wextra -Werror -I/Users/kruseva/Desktop/AllProjects/fract-ol/m
 
 NAME = fractol
 
-SRC_FILES = mandelbrot.c moves.c drawSet.c
+SRC_FILES = mandelbrot.c moves.c drawSet.c julia.c burningship.c
 
 LIBRARIES = -L/Users/kruseva/Desktop/AllProjects/fract-ol/minilibx_opengl_20191021 -lmlx -framework OpenGL -framework AppKit
 
