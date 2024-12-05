@@ -6,7 +6,7 @@
 /*   By: kruseva <kruseva@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 14:07:08 by kruseva           #+#    #+#             */
-/*   Updated: 2024/12/01 21:30:07 by kruseva          ###   ########.fr       */
+/*   Updated: 2024/12/05 14:29:25 by kruseva          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ typedef struct s_data {
 
 
 void	*initialize(char **name);
-int handle_key(int key, t_data *data);
+int handle_key(int key, t_data *fractol);
 
 int handle_mouse(int button, int x, int y, t_data *data);
 void createMandelbrot(t_data *fractal);

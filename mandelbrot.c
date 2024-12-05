@@ -6,7 +6,7 @@
 /*   By: kruseva <kruseva@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:16:07 by kruseva           #+#    #+#             */
-/*   Updated: 2024/12/01 21:31:35 by kruseva          ###   ########.fr       */
+/*   Updated: 2024/12/05 14:31:40 by kruseva          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void createMandelbrot(t_data *fractal)
 
 int main(int argc, char **argv)
 {
-    printf("Program started\n");
     if (argc != 2)
     {
         printf("Usage: ./mandelbrot [mandelbrot]\n");
