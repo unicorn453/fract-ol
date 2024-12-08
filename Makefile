@@ -1,43 +1,37 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: kruseva <kruseva@student.42.fr>            +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/11/11 11:47:10 by kruseva           #+#    #+#              #
-#    Updated: 2024/12/06 14:17:54 by kruseva          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+MLX_DIR = minilibx_opengl_20191021
+PRINTF_DIR = ft_printf
 
+CC = gcc
+CC_FLAGS = -Wall -Wextra -Werror \
+           -I$(MLX_DIR) \
+           -I$(PRINTF_DIR)
 
-CC_FLAGS = -Wall -Werror -Wextra
+LIBRARIES = -L$(MLX_DIR) -L$(PRINTF_DIR) -lmlx -lftprintf -framework OpenGL -framework AppKit
 
-NAME = libftprintf.a 
+NAME = fractol
+SRC_FILES = mandelbrot.c moves.c drawset.c julia.c burningship.c helper_functions.c main.c ft_atof.c
+OBJ = $(SRC_FILES:.c=.o)
 
-SRC_FILES = ft_putnbr.c conversion.c helper_functions.c ft_printf.c hexadecimal.c
+%.o: %.c
+	$(CC) $(CC_FLAGS) -c $< -o $@
 
-OBJ_FILES = $(SRC_FILES:%.c=%.o)
-
-
-%.o: %.c 
-	$(CC) $(CC_FLAGS) -c $< -o $@ 
-
-
-$(NAME): $(OBJ_FILES)
-	ar -rcs $(NAME) $(OBJ_FILES)
-
+$(NAME): $(OBJ)
+	make -C $(MLX_DIR)
+	make -C $(PRINTF_DIR)
+	$(CC) $(CC_FLAGS) $(OBJ) -o $(NAME) $(LIBRARIES)
 
 all: $(NAME)
 
-
 clean:
-	rm -f $(OBJ_FILES) 
+	rm -f $(OBJ)
+	make -C $(MLX_DIR) clean
+	make -C $(PRINTF_DIR) clean
 
 fclean: clean
-	@rm -f $(NAME)
+	rm -f $(NAME)
+	make -C $(MLX_DIR) clean
+	make -C $(PRINTF_DIR) clean
 
-re: fclean all
-
+re: fclean $(NAME)
 
 .PHONY: all clean fclean re
