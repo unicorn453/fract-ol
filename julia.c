@@ -6,7 +6,7 @@
 /*   By: kruseva <kruseva@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 14:35:10 by kruseva           #+#    #+#             */
-/*   Updated: 2024/12/08 16:11:23 by kruseva          ###   ########.fr       */
+/*   Updated: 2024/12/08 20:05:11 by kruseva          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,16 +78,16 @@ int	initialize_julia(char **name, char **real, char **imaginary)
 {
 	t_data	*fractal;
 
+	double real_check = ft_atof(*real);
+	double imginary_check = ft_atof(*imaginary);
+	if(real_check < -2.0 || real_check > 2.0 || imginary_check < -2.0 || imginary_check > 2.0)
+	{
+		ft_printf("Error: values must be between -2.0 and 2.0.\n");
+		exit(EXIT_FAILURE);
+	}
 	fractal = initialize_fractal(name);
 	fractal->c.real = ft_atof(*real);
 	fractal->c.imaginary = ft_atof(*imaginary);
-	if (fractal->c.real < -2.0 || fractal->c.real > 2.0
-		|| fractal->c.imaginary < -2.0 || fractal->c.imaginary > 2.0)
-	{
-		ft_printf("Error: values must be between -2.0 and 2.0.\n");
-		free(fractal);
-		exit(EXIT_FAILURE);
-	}
 	if (ft_strcmp(*name, "julia") == 0)
 		draw_set(fractal);
 	else

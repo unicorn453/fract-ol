@@ -6,11 +6,28 @@
 /*   By: kruseva <kruseva@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 13:30:50 by kruseva           #+#    #+#             */
-/*   Updated: 2024/12/07 21:38:37 by kruseva          ###   ########.fr       */
+/*   Updated: 2024/12/08 19:59:20 by kruseva          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
+
+
+// Function to check memory leaks
+void check_system_memory_leaks(void)
+{
+    system("leaks fractol");
+}
+
+// Setup memory leak checker
+void setup_memory_leak_checker(void)
+{
+    if (atexit(check_system_memory_leaks) != 0)
+    {
+        fprintf(stderr, "Failed to register memory leak checker.\n");
+    }
+}
+
 
 void	*ft_memset(void *s, int c, size_t n)
 {
@@ -53,6 +70,8 @@ int	handle_julia(char **argv)
 
 int	main(int argc, char **argv)
 {
+
+	setup_memory_leak_checker();
 	if (argc < 2)
 	{
 		print_usage();
