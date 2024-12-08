@@ -1,26 +1,37 @@
-CC_FLAGS = -Wall -Wextra -Werror -I/Users/kruseva/Desktop/AllProjects/fract-ol/minilibx_opengl_20191021
+MLX_DIR = minilibx_opengl_20191021
+PRINTF_DIR = ft_printf
+
+CC = gcc
+CC_FLAGS = -Wall -Wextra -Werror \
+           -I$(MLX_DIR) \
+           -I$(PRINTF_DIR)
+
+LIBRARIES = -L$(MLX_DIR) -L$(PRINTF_DIR) -lmlx -lftprintf -framework OpenGL -framework AppKit
 
 NAME = fractol
-
-SRC_FILES = mandelbrot.c moves.c drawSet.c julia.c burningship.c
-
-LIBRARIES = -L/Users/kruseva/Desktop/AllProjects/fract-ol/minilibx_opengl_20191021 -lmlx -framework OpenGL -framework AppKit
-
+SRC_FILES = mandelbrot.c moves.c drawset.c julia.c burningship.c helper_functions.c main.c ft_atof.c
 OBJ = $(SRC_FILES:.c=.o)
 
 %.o: %.c
 	$(CC) $(CC_FLAGS) -c $< -o $@
 
 $(NAME): $(OBJ)
-	make -C /Users/kruseva/Desktop/AllProjects/fract-ol/minilibx_opengl_20191021
+	make -C $(MLX_DIR)
+	make -C $(PRINTF_DIR)
 	$(CC) $(CC_FLAGS) $(OBJ) -o $(NAME) $(LIBRARIES)
+
+all: $(NAME)
 
 clean:
 	rm -f $(OBJ)
-	make -C /Users/kruseva/Desktop/AllProjects/fract-ol/minilibx_opengl_20191021 clean
+	make -C $(MLX_DIR) clean
+	make -C $(PRINTF_DIR) clean
 
 fclean: clean
 	rm -f $(NAME)
-	make -C /Users/kruseva/Desktop/AllProjects/fract-ol/minilibx_opengl_20191021 clean
+	make -C $(MLX_DIR) clean
+	make -C $(PRINTF_DIR) clean
 
 re: fclean $(NAME)
+
+.PHONY: all clean fclean re
