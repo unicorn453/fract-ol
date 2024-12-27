@@ -19,17 +19,17 @@ int	pre_defined_colors(int numColor)
 	if (numColor == 1)
 		return (get_color_by_name("blue"));
 	if (numColor == 2)
-		return (get_color_by_name("green"));
+		return (get_color_by_name("darkgreen"));
 	if (numColor == 3)
-		return (get_color_by_name("red"));
+		return (get_color_by_name("red4"));
 	if (numColor == 4)
-		return (get_color_by_name("yellow"));
+		return (get_color_by_name("gold4"));
 	if (numColor == 5)
-		return (get_color_by_name("pink"));
+		return (get_color_by_name("hotpink4"));
 	if (numColor == 6)
-		return (get_color_by_name("magenta"));
+		return (get_color_by_name("magenta4"));
 	if (numColor == 7)
-		return (get_color_by_name("purple"));
+		return (get_color_by_name("mediumpurple4"));
 	return (0);
 }
 

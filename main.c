@@ -13,21 +13,6 @@
 #include "fractol.h"
 
 
-// Function to check memory leaks
-void check_system_memory_leaks(void)
-{
-    system("leaks fractol");
-}
-
-// Setup memory leak checker
-void setup_memory_leak_checker(void)
-{
-    if (atexit(check_system_memory_leaks) != 0)
-    {
-        fprintf(stderr, "Failed to register memory leak checker.\n");
-    }
-}
-
 
 void	*ft_memset(void *s, int c, size_t n)
 {
@@ -71,7 +56,6 @@ int	handle_julia(char **argv)
 int	main(int argc, char **argv)
 {
 
-	setup_memory_leak_checker();
 	if (argc < 2)
 	{
 		print_usage();
